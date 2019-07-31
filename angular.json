@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "unit-testing": {
+    "angular-unit-testing": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/unit-testing",
+            "outputPath": "dist/angular-unit-testing",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -58,18 +58,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "unit-testing:build"
+            "browserTarget": "angular-unit-testing:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "unit-testing:build:production"
+              "browserTarget": "angular-unit-testing:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "unit-testing:build"
+            "browserTarget": "angular-unit-testing:build"
           }
         },
         "test": {
@@ -94,27 +94,14 @@
           "options": {
             "tsConfig": [
               "tsconfig.app.json",
-              "tsconfig.spec.json",
-              "e2e/tsconfig.json"
+              "tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
             ]
           }
-        },
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "unit-testing:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "unit-testing:serve:production"
-            }
-          }
         }
       }
     }},
-  "defaultProject": "unit-testing"
+  "defaultProject": "angular-unit-testing"
 }
