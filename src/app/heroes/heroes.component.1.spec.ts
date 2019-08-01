@@ -8,7 +8,7 @@ import { HeroesComponent } from './heroes.component';
 
 import SpyObj = jasmine.SpyObj;
 
-fdescribe('HeroesComponent 1', () => {
+describe('HeroesComponent 1', () => {
   let sud: HeroesComponent;
   let fixture: ComponentFixture<HeroesComponent>;
   let heroService: SpyObj<HeroService>;

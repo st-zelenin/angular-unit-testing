@@ -1,6 +1,5 @@
 import { DebugElement } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
 
 import { Hero } from '../hero';
@@ -32,7 +31,7 @@ class HeroesPage extends Page<HeroesComponent> {
   }
 }
 
-fdescribe('HeroesComponent 2', () => {
+describe('HeroesComponent 2', () => {
   let sud: HeroesComponent;
   let fixture: ComponentFixture<HeroesComponent>;
   let heroService: SpyObj<HeroService>;

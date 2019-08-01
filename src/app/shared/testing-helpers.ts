@@ -1,8 +1,7 @@
-import { defer } from 'rxjs/internal/observable/defer';
+import { DebugElement, Directive, HostListener, Input } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
-import { DebugElement, Directive, Input, HostListener } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { Type } from '@angular/compiler';
+import { defer } from 'rxjs/internal/observable/defer';
 
 export function asyncData<T>(data: T) {
   return defer(() => Promise.resolve(data));
@@ -26,7 +25,7 @@ export class RouterLinkDirectiveStub {
 }
 
 export abstract class Page<P> {
-  constructor(protected _fixture: ComponentFixture<P>) {}
+  constructor(protected _fixture: ComponentFixture<P>) { }
 
   protected query<T>(selector: string): T {
     return this._fixture.nativeElement.querySelector(selector);
@@ -50,5 +49,18 @@ export abstract class Page<P> {
 
   protected queryAllDeByDirective(directive): DebugElement[] {
     return this._fixture.debugElement.queryAll(By.directive(directive));
+  }
+}
+
+export const ButtonClickEvents = {
+  left: { button: 0 },
+  right: { button: 2 }
+};
+
+export function click(el: DebugElement | HTMLElement, eventObj: any = ButtonClickEvents.left): void {
+  if (el instanceof HTMLElement) {
+    el.click();
+  } else {
+    el.triggerEventHandler('click', eventObj);
   }
 }
