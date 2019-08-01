@@ -1,7 +1,8 @@
 import { defer } from 'rxjs/internal/observable/defer';
 import { ComponentFixture } from '@angular/core/testing';
-import { DebugElement } from '@angular/core';
+import { DebugElement, Directive, Input, HostListener } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { Type } from '@angular/compiler';
 
 export function asyncData<T>(data: T) {
   return defer(() => Promise.resolve(data));
@@ -9,6 +10,19 @@ export function asyncData<T>(data: T) {
 
 export function asyncError<T>(errorObject: any) {
   return defer(() => Promise.reject(errorObject));
+}
+
+@Directive({
+  selector: '[routerLink]'
+})
+export class RouterLinkDirectiveStub {
+  @Input('routerLink') linkParams: any;
+  navigatedTo: any = null;
+
+  @HostListener('click')
+  onClick() {
+    this.navigatedTo = this.linkParams;
+  }
 }
 
 export abstract class Page<P> {
@@ -22,11 +36,19 @@ export abstract class Page<P> {
     return this._fixture.nativeElement.querySelectorAll(selector);
   }
 
-  protected queryDe(selector: string): DebugElement {
+  protected queryDeByCss(selector: string): DebugElement {
     return this._fixture.debugElement.query(By.css(selector));
   }
 
-  protected queryAllDe(selector: string): DebugElement[] {
+  protected queryAllDeByCss(selector: string): DebugElement[] {
     return this._fixture.debugElement.queryAll(By.css(selector));
+  }
+
+  protected queryDeByDirective(directive): DebugElement {
+    return this._fixture.debugElement.query(By.directive(directive));
+  }
+
+  protected queryAllDeByDirective(directive): DebugElement[] {
+    return this._fixture.debugElement.queryAll(By.directive(directive));
   }
 }

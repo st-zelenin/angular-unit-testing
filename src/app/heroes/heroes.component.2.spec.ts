@@ -1,10 +1,11 @@
+import { DebugElement } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
 
 import { Hero } from '../hero';
 import { HeroService } from '../hero.service';
-import { Page } from '../shared/testing-helpers';
+import { Page, RouterLinkDirectiveStub } from '../shared/testing-helpers';
 import { HeroesComponent } from './heroes.component';
 
 import SpyObj = jasmine.SpyObj;
@@ -25,6 +26,10 @@ class HeroesPage extends Page<HeroesComponent> {
   get deleteHeroButtons(): HTMLButtonElement[] {
     return super.queryAll('li button');
   }
+
+  get routeLinks(): DebugElement[] {
+    return super.queryAllDeByDirective(RouterLinkDirectiveStub);
+  }
 }
 
 fdescribe('HeroesComponent 2', () => {
@@ -34,16 +39,15 @@ fdescribe('HeroesComponent 2', () => {
   let heroes: Hero[];
   let page: HeroesPage;
 
-
   beforeEach(async(() => {
     heroes = [{ id: 1, name: 'Batman' }, { id: 2, name: 'Superman' }] as Hero[];
     heroService = jasmine.createSpyObj<HeroService>(['getHeroes', 'addHero', 'deleteHero']);
     heroService.getHeroes.and.returnValue(of(heroes));
 
     TestBed.configureTestingModule({
-      declarations: [HeroesComponent],
+      declarations: [HeroesComponent, RouterLinkDirectiveStub],
       providers: [{ provide: HeroService, useValue: heroService }],
-      imports: [RouterTestingModule.withRoutes([])],
+      // imports: [RouterTestingModule.withRoutes([])],
     }).compileComponents();
   }));
 
@@ -68,9 +72,10 @@ fdescribe('HeroesComponent 2', () => {
   });
 
   it('should render links to hero details', () => {
-    const hrefs = Array.from(page.heroLinks).map(a => a.getAttribute('href'));
+    const routeLinks = page.routeLinks.map(de => de.injector.get(RouterLinkDirectiveStub));
 
-    expect(hrefs).toEqual(['/detail/1', '/detail/2']);
+    expect(routeLinks[0].linkParams).toBe('/detail/1');
+    expect(routeLinks[1].linkParams).toBe('/detail/2');
   });
 
   it('should add new hero to the hero list', () => {
@@ -97,7 +102,7 @@ fdescribe('HeroesComponent 2', () => {
   });
 
   it('should delete a hero', () => {
-    heroService.deleteHero.and.callFake(() => of());
+    heroService.deleteHero.and.callFake(of);
 
     page.deleteHeroButtons[1].click();
     fixture.detectChanges();
